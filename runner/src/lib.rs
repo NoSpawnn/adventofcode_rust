@@ -1,20 +1,11 @@
 use std::{fs::read_to_string, path::PathBuf};
 
-#[macro_export]
-macro_rules! year {
-    ($($day:ident), +) => {
-        $(pub mod $day;)+
-    };
-}
+pub type SolutionFunc = fn(&str) -> (i32, i32);
 
-#[macro_export]
 macro_rules! run {
-    ($year:ident, $day:ident) => {
-        use runner::Solution;
-        let s = Solution::new(stringify!($year), stringify!($day), {
-            y$year::day$day::solve
-        });
-        println!("{:?}", s.solve());
+    ($year:ident $day:ident) => {
+        include!(y2024::day01::solve)
+        let input_file = PathBuf::from(concat!("inputs/", $year, "/day", $day, ".in"));
     };
 }
 
@@ -22,14 +13,14 @@ pub struct Solution {
     pub year: String,
     pub day: String,
     input_file: PathBuf,
-    solve_func: fn(&str) -> (i32, i32),
+    solve_func: SolutionFunc,
 }
 
 impl Solution {
-    pub fn new(year: &str, day: &str, solve_func: fn(&str) -> (i32, i32)) -> Self {
+    pub fn new(year: i32, day: i32, solve_func: SolutionFunc) -> Self {
         Self {
-            year: year.to_owned(),
-            day: day.to_owned(),
+            year: year.to_string(),
+            day: format!("{day}:02d"),
             input_file: PathBuf::from(format!("inputs/{year}/day{day}.in")),
             solve_func,
         }

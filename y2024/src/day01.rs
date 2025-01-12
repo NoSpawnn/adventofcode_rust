@@ -1,3 +1,5 @@
+// https://adventofcode.com/2024/day/1
+
 use std::collections::HashMap;
 use std::iter::zip;
 use std::num::ParseIntError;

@@ -1,0 +1,1 @@
+include!(y2024::day01::solve)

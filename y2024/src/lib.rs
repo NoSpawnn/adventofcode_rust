@@ -1,3 +1,1 @@
-use runner::year;
-
-year!(day01);
+pub mod day01;
