@@ -1,0 +1,2 @@
+Map<Filter<Enumerate<core::slice::iter::Iter<'_, i32>>, {closure@src/bin/02.rs:25:37: 25:47}>, {closure@src/bin/02.rs:26:34: 26:42}>
+Map<Filter<Enumerate<std::slice::Iter<'_, i32>>, {closure@src/bin/02.rs:25:37: 25:47}>, {closure@src/bin/02.rs:26:34: 26:42}>

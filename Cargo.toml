@@ -1,9 +1,0 @@
-[package]
-name = "adventofcode_rust"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-y2024 = { version = "0.1.0", path = "y2024" }
-runner = { version = "0.1.0", path = "runner" }
-lazy_static = "1.5.0"
