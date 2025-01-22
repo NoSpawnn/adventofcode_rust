@@ -13,21 +13,10 @@ fn main() {
         })
         .collect();
 
-    let p1 = &nums.iter().filter(|nums| check(nums)).count();
-    let p2 = &nums
+    let p1 = nums.iter().filter(|ns| check(ns)).count();
+    let p2 = nums
         .iter()
-        .filter(|nums| {
-            check(nums)
-                || (0..nums.len() - 1)
-                    .map(|i| {
-                        nums.iter()
-                            .enumerate()
-                            .filter_map(|(cur, n)| if cur != i { Some(*n) } else { None })
-                            .collect::<Vec<i32>>()
-                    })
-                    .find(|with_removed| check(with_removed))
-                    .is_some()
-        })
+        .filter(|ns| (0..ns.len()).any(|i| check(&[&ns[..i], &ns[i + 1..]].concat())))
         .count();
 
     println!("2024 Day 02:");
@@ -35,24 +24,16 @@ fn main() {
     println!("  Part 2: {p2}");
 }
 
-fn check(nums: &Vec<i32>) -> bool {
+fn check(nums: &[i32]) -> bool {
     let pairs = nums.iter().zip(nums.iter().skip(1));
-    let safe_score = pairs.len();
+    let safe_score = pairs.len() as i32;
     let actual_score = pairs
-        .map(|(prev, this)| {
-            let diff = prev - this;
-            if diff.abs() > 3 {
-                0
-            } else {
-                match diff {
-                    1..=3 => 1,
-                    0 => 0,
-                    _ => -1,
-                }
-            }
+        .map(|(prev, this)| match (prev - this).abs() {
+            0..=3 => (prev - this).clamp(-1, 1),
+            _ => 0,
         })
         .sum::<i32>()
         .abs();
 
-    actual_score == safe_score as i32
+    actual_score == safe_score
 }
