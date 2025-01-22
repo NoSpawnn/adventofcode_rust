@@ -36,7 +36,7 @@ fn main() {
         }
     }
 
-    println!("2024 Day 03:");
+    println!("2024 Day 04:");
     println!("  Part 1: {p1}");
     println!("  Part 2: {p2}");
 }
