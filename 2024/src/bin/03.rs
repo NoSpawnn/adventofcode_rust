@@ -15,11 +15,16 @@ fn main() {
             "don't()" => enabled = false,
             "do()" => enabled = true,
             _ => {
-                let n1: i32 = caps.get(2).unwrap().as_str().parse().unwrap();
-                let n2: i32 = caps.get(3).unwrap().as_str().parse().unwrap();
-                p1 += n1 * n2;
-                if enabled {
-                    p2 += n1 * n2
+                if let (Some(n1_str), Some(n2_str)) = (caps.get(2), caps.get(3)) {
+                    if let (Ok(n1), Ok(n2)) = (
+                        n1_str.as_str().parse::<i32>(),
+                        n2_str.as_str().parse::<i32>(),
+                    ) {
+                        p1 += n1 * n2;
+                        if enabled {
+                            p2 += n1 * n2;
+                        }
+                    }
                 }
             }
         }
