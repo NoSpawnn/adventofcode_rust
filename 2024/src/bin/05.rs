@@ -15,9 +15,9 @@ fn main() {
     for rule in rules.lines() {
         let (x, y) = rule
             .split_once('|')
-            .and_then(|(x, y)| Some((x.parse::<i32>().unwrap(), y.parse::<i32>().unwrap())))
+            .map(|(x, y)| (x.parse::<i32>().unwrap(), y.parse::<i32>().unwrap()))
             .unwrap();
-        afters.entry(x).or_insert(HashSet::new()).insert(y);
+        afters.entry(x).or_default().insert(y);
     }
 
     let mut p1 = 0;
@@ -60,8 +60,8 @@ fn is_valid(nums: &Vec<i32>, afters: &AfterMap) -> bool {
     true
 }
 
-fn get_correct_order(nums: &Vec<i32>, afters: &AfterMap) -> Vec<i32> {
-    let correct = Vec::new();
+fn get_correct_order(nums: &[i32], afters: &AfterMap) -> Vec<i32> {
+    let mut correct = Vec::new();
 
     correct
 }

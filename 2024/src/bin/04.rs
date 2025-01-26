@@ -17,21 +17,25 @@ fn main() {
     let mut p2 = 0;
     for (y, line) in lines.iter().enumerate() {
         for (x, c) in line.char_indices() {
-            if c == 'X' {
-                p1 += directions
-                    .iter()
-                    .filter(|&&dir| search(&lines, "XMAS", x as i32, y as i32, dir))
-                    .count();
-            } else if c == 'A' {
-                p2 += match CORNERS
-                    .iter()
-                    .map(|(dx, dy)| safe_get_at(&lines, x as i32 + *dx, y as i32 + *dy))
-                    .collect::<String>()
-                    .as_str()
-                {
-                    "MMSS" | "MSSM" | "SSMM" | "SMMS" => 1,
-                    _ => 0,
+            match c {
+                'X' => {
+                    p1 += directions
+                        .iter()
+                        .filter(|&&dir| search(&lines, "XMAS", x as i32, y as i32, dir))
+                        .count()
                 }
+                'A' => {
+                    p2 += match CORNERS
+                        .iter()
+                        .map(|(dx, dy)| safe_get_at(&lines, x as i32 + *dx, y as i32 + *dy))
+                        .collect::<String>()
+                        .as_str()
+                    {
+                        "MMSS" | "MSSM" | "SSMM" | "SMMS" => 1,
+                        _ => 0,
+                    }
+                }
+                _ => continue,
             }
         }
     }
@@ -57,8 +61,8 @@ fn char_at(s: &str, i: usize) -> char {
     s.chars().nth(i).unwrap()
 }
 
-fn safe_get_at(grid: &Vec<String>, x: i32, y: i32) -> char {
-    if (y as usize) < grid.len() && (x as usize) < grid.get(0).unwrap().len() {
+fn safe_get_at(grid: &[String], x: i32, y: i32) -> char {
+    if (y as usize) < grid.len() && (x as usize) < grid.first().unwrap().len() {
         char_at(&grid[y as usize], x as usize)
     } else {
         ' '
