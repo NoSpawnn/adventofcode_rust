@@ -6,7 +6,7 @@ const CARDINAL: [(i32, i32); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 const CORNERS: [(i32, i32); 4] = [(-1, -1), (-1, 1), (1, 1), (1, -1)];
 
 fn main() {
-    let lines = read_to_string("inputs/day04.in")
+    let lines = read_to_string("inputs/04.in")
         .unwrap()
         .lines()
         .map(|l| l.to_owned())

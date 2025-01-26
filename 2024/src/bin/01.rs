@@ -5,7 +5,7 @@ use std::fs::read_to_string;
 use std::iter::zip;
 
 fn main() {
-    let input = read_to_string("inputs/day01.in").unwrap();
+    let input = read_to_string("inputs/01.in").unwrap();
     let (mut left, mut right): (Vec<_>, Vec<_>) = input
         .lines()
         .map(|line| {

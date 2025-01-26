@@ -3,7 +3,7 @@
 use std::fs::read_to_string;
 
 fn main() {
-    let input = read_to_string("inputs/day02.in").unwrap();
+    let input = read_to_string("inputs/02.in").unwrap();
     let nums: Vec<Vec<i32>> = input
         .lines()
         .map(|line| {

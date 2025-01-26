@@ -4,7 +4,7 @@ use regex::Regex;
 use std::fs::read_to_string;
 
 fn main() {
-    let input = read_to_string("inputs/day03.in").unwrap();
+    let input = read_to_string("inputs/03.in").unwrap();
     let mul_rgx = Regex::new(r"(mul\((\d{1,3}),(\d{1,3})\))|(do\(\))|(don\'t\(\))").unwrap();
     let mut p1 = 0;
     let mut p2 = 0;
