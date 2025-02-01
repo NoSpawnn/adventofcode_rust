@@ -1,11 +1,12 @@
 // https://adventofcode.com/2024/day/5
 
 use std::{
+    cmp::Ordering,
     collections::{HashMap, HashSet},
     fs::read_to_string,
 };
 
-type AfterMap = HashMap<i32, HashSet<i32>>;
+type AfterMap<'a> = HashMap<&'a str, HashSet<&'a str>>;
 
 fn main() {
     let input = read_to_string("inputs/05.in").unwrap();
@@ -13,27 +14,28 @@ fn main() {
 
     let mut afters: AfterMap = HashMap::new();
     for rule in rules.lines() {
-        let (x, y) = rule
-            .split_once('|')
-            .map(|(x, y)| (x.parse::<i32>().unwrap(), y.parse::<i32>().unwrap()))
-            .unwrap();
+        let (x, y) = rule.split_once('|').unwrap();
         afters.entry(x).or_default().insert(y);
     }
 
     let mut p1 = 0;
     let mut p2 = 0;
     for update in updates.lines() {
-        let nums: Vec<i32> = update
-            .split(',')
-            .map(|n| n.parse::<i32>().unwrap())
-            .collect();
-
+        let mut nums = update.split(',').collect();
         if is_valid(&nums, &afters) {
-            p1 += nums.get(nums.len() / 2).unwrap();
+            p1 += nums[nums.len() / 2].parse::<i32>().unwrap_or(0);
         } else {
-            p2 += get_correct_order(&nums, &afters)
-                .get(nums.len() / 2)
-                .unwrap();
+            nums.sort_by(|a, b| {
+                match (
+                    afters.get(a).is_some_and(|s| s.contains(b)),
+                    afters.get(b).is_some_and(|s| s.contains(a)),
+                ) {
+                    (true, false) => Ordering::Less,    // a -> b
+                    (false, true) => Ordering::Greater, // b -> a
+                    _ => Ordering::Equal,
+                }
+            });
+            p2 += nums[nums.len() / 2].parse::<i32>().unwrap_or(0);
         }
     }
 
@@ -42,8 +44,8 @@ fn main() {
     println!("  Part 2: {p2}");
 }
 
-fn is_valid(nums: &Vec<i32>, afters: &AfterMap) -> bool {
-    let mut seen: HashSet<i32> = HashSet::new();
+fn is_valid(nums: &Vec<&str>, afters: &AfterMap) -> bool {
+    let mut seen: HashSet<&str> = HashSet::new();
 
     for num in nums {
         seen.insert(*num);
@@ -52,16 +54,10 @@ fn is_valid(nums: &Vec<i32>, afters: &AfterMap) -> bool {
             continue;
         }
 
-        if afters.get(num).unwrap().iter().any(|n| seen.contains(n)) {
+        if afters[num].iter().any(|n| seen.contains(n)) {
             return false;
         }
     }
 
     true
-}
-
-fn get_correct_order(nums: &[i32], afters: &AfterMap) -> Vec<i32> {
-    let mut correct = Vec::new();
-
-    correct
 }
