@@ -33,10 +33,11 @@ fn main() {
     let mut start_pos: Option<(usize, usize)> = None;
     for (r, line) in grid.iter().enumerate() {
         for (c, chr) in line.char_indices() {
+            let p = (r, c);
             if chr == '^' {
-                start_pos = Some((r, c));
+                start_pos = Some(p);
             } else if chr == '#' {
-                obstacles.insert((r, c));
+                obstacles.insert(p);
             }
         }
     }
@@ -77,34 +78,37 @@ fn patrol(
     loop {
         visited.insert(current_pos);
 
-        let (next_row, next_col) = match facing {
-            Dir::Up => (current_pos.0.checked_sub(1), Some(current_pos.1)),
-            Dir::Down => (current_pos.0.inc_unless_max(rows), Some(current_pos.1)),
-            Dir::Left => (Some(current_pos.0), current_pos.1.checked_sub(1)),
-            Dir::Right => (Some(current_pos.0), current_pos.1.inc_unless_max(cols)),
+        let ((next_row, next_col), next_facing) = match facing {
+            Dir::Up => (
+                (current_pos.0.checked_sub(1), Some(current_pos.1)),
+                Dir::Right,
+            ),
+            Dir::Down => (
+                (current_pos.0.inc_unless_max(rows), Some(current_pos.1)),
+                Dir::Left,
+            ),
+            Dir::Left => ((Some(current_pos.0), current_pos.1.checked_sub(1)), Dir::Up),
+            Dir::Right => (
+                (Some(current_pos.0), current_pos.1.inc_unless_max(cols)),
+                Dir::Down,
+            ),
         };
 
-        if next_row.is_none() || next_col.is_none() {
-            break;
-        }
+        if let (Some(next_row), Some(next_col)) = (next_row, next_col) {
+            let next_pos = (next_row, next_col);
+            if seen_obstacles.contains(&(next_row, next_col, facing)) {
+                return (visited, true);
+            }
 
-        let (next_row, next_col) = (next_row.unwrap(), next_col.unwrap());
-        if seen_obstacles.contains(&(next_row, next_col, facing)) {
-            return (visited, true);
-        }
-
-        let next_pos = (next_row, next_col);
-        if obstacles.contains(&next_pos) {
-            seen_obstacles.insert((next_row, next_col, facing));
-            facing = match facing {
-                Dir::Up => Dir::Right,
-                Dir::Down => Dir::Left,
-                Dir::Left => Dir::Up,
-                Dir::Right => Dir::Down,
+            if obstacles.contains(&next_pos) {
+                seen_obstacles.insert((next_row, next_col, facing));
+                facing = next_facing;
+            } else {
+                visited.insert(next_pos);
+                current_pos = next_pos;
             }
         } else {
-            visited.insert(next_pos);
-            current_pos = next_pos;
+            break;
         }
     }
 
