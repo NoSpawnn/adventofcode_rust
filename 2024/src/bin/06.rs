@@ -29,6 +29,7 @@ fn main() {
     let start = time::Instant::now();
 
     let grid: Vec<_> = input.lines().collect();
+    let grid_size = (grid.len(), grid[0].len());
     let mut obstacles: HashSet<(usize, usize)> = HashSet::new();
     let mut start_pos: Option<(usize, usize)> = None;
     for (r, line) in grid.iter().enumerate() {
@@ -42,21 +43,18 @@ fn main() {
         }
     }
     let start_pos = start_pos.unwrap();
-    let grid_size = (grid.len(), grid[0].len());
 
     let (visited, _) = patrol(grid_size, &obstacles, start_pos);
     let p1 = visited.len();
-    let p2 = {
-        visited
-            .iter()
-            .filter(|&pos| {
-                obstacles.insert(*pos);
-                let (_, is_loop) = patrol(grid_size, &obstacles, start_pos);
-                obstacles.remove(pos);
-                is_loop
-            })
-            .count()
-    };
+    let p2 = visited
+        .iter()
+        .filter(|&pos| {
+            obstacles.insert(*pos);
+            let (_, is_loop) = patrol(grid_size, &obstacles, start_pos);
+            obstacles.remove(pos);
+            is_loop
+        })
+        .count();
 
     let end = start.elapsed();
     println!("2024 Day 06:");
