@@ -1,16 +1,15 @@
 // https://adventofcode.com/2024/day/4
 
-use std::fs::read_to_string;
+use std::{fs::read_to_string, time};
 
 const CARDINAL: [(i32, i32); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 const CORNERS: [(i32, i32); 4] = [(-1, -1), (-1, 1), (1, 1), (1, -1)];
 
 fn main() {
-    let lines = read_to_string("inputs/04.in")
-        .unwrap()
-        .lines()
-        .map(|l| l.to_owned())
-        .collect::<Vec<_>>();
+    let input = read_to_string("inputs/04.in").unwrap();
+    let start = time::Instant::now();
+
+    let lines = input.lines().map(|l| l.to_owned()).collect::<Vec<_>>();
     let directions = &[CARDINAL, CORNERS].concat();
 
     let mut p1 = 0;
@@ -40,9 +39,11 @@ fn main() {
         }
     }
 
+    let end = start.elapsed();
     println!("2024 Day 04:");
     println!("  Part 1: {p1}");
     println!("  Part 2: {p2}");
+    println!("    Time: {end:.2?}");
 }
 
 fn search(haystack: &Vec<String>, needle: &str, x: i32, y: i32, dir: (i32, i32)) -> bool {

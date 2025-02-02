@@ -3,9 +3,12 @@
 use std::collections::HashMap;
 use std::fs::read_to_string;
 use std::iter::zip;
+use std::time;
 
 fn main() {
     let input = read_to_string("inputs/01.in").unwrap();
+    let start = time::Instant::now();
+
     let (mut left, mut right): (Vec<_>, Vec<_>) = input
         .lines()
         .map(|line| {
@@ -28,7 +31,9 @@ fn main() {
         .map(|n| occurrences.get(n).unwrap_or(&0) * n)
         .sum::<i32>();
 
+    let end = start.elapsed();
     println!("2024 Day 01:");
     println!("  Part 1: {p1}");
     println!("  Part 2: {p2}");
+    println!("    Time: {end:.2?}");
 }

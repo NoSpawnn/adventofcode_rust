@@ -1,10 +1,12 @@
 // https://adventofcode.com/2024/day/3
 
 use regex::Regex;
-use std::fs::read_to_string;
+use std::{fs::read_to_string, time};
 
 fn main() {
     let input = read_to_string("inputs/03.in").unwrap();
+    let start = time::Instant::now();
+
     let mul_rgx = Regex::new(r"(mul\((\d{1,3}),(\d{1,3})\))|(do\(\))|(don\'t\(\))").unwrap();
     let mut p1 = 0;
     let mut p2 = 0;
@@ -30,7 +32,9 @@ fn main() {
         }
     }
 
+    let end = start.elapsed();
     println!("2024 Day 03:");
     println!("  Part 1: {p1}");
     println!("  Part 2: {p2}");
+    println!("    Time: {end:.2?}");
 }
