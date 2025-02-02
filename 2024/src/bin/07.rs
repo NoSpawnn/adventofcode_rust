@@ -50,6 +50,7 @@ fn solve_equations(equations: &[(u64, Vec<u64>)], part: Part) -> u64 {
                             },
                         ]
                         .iter()
+                        .filter(|x| x.is_some_and(|x| x <= *target))
                         .flatten(),
                     );
                 }
